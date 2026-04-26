@@ -1,0 +1,11 @@
+{
+  "app_name": "OneForMind",
+  "welcome": "Selamat Datang di OneForMind",
+  "login": "Masuk",
+  "register": "Daftar",
+  "auth": {
+    "email": "Email",
+    "password": "Kata Sandi",
+    "login_button": "Masuk Sekarang"
+  }
+}

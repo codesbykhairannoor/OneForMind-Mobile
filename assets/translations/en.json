@@ -1,0 +1,11 @@
+{
+  "app_name": "OneForMind",
+  "welcome": "Welcome to OneForMind",
+  "login": "Login",
+  "register": "Register",
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "login_button": "Login Now"
+  }
+}
