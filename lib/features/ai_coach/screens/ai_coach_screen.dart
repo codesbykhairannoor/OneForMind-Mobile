@@ -108,18 +108,32 @@ class _AiCoachScreenState extends ConsumerState<AiCoachScreen> {
           ),
           const Divider(height: 1),
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length + (_isTyping ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (_isTyping && index == messages.length) {
-                  return const _TypingIndicator();
-                }
-                final message = messages[index];
-                return _MessageBubble(message: message);
-              },
-            ),
+            child: messages.isEmpty && !_isTyping
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.psychology, size: 64, color: AppTheme.primaryColor.withOpacity(0.3)),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Start a conversation with your AI Coach',
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: messages.length + (_isTyping ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (_isTyping && index == messages.length) {
+                        return const _TypingIndicator();
+                      }
+                      final message = messages[index];
+                      return _MessageBubble(message: message);
+                    },
+                  ),
           ),
           Container(
             padding: const EdgeInsets.all(16),

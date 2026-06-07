@@ -55,18 +55,18 @@ class AiCoachService {
         'message': message,
         if (action != null) 'action': action,
       });
-      return response.data['reply'] ?? 'No response from AI.';
+      return response.data['reply'] ?? response.data['message'] ?? 'No response from AI.';
     } catch (e) {
-      return 'Error: Failed to get response from AI Coach.';
+      return 'Error: Failed to get response from AI Coach. Please try again.';
     }
   }
 
   Future<String> triggerAction(String action, {Map<String, dynamic>? payload}) async {
     try {
       final response = await _dio.post('/coach/$action', data: payload ?? {});
-      return response.data['reply'] ?? 'Action completed.';
+      return response.data['reply'] ?? response.data['message'] ?? 'Action completed successfully.';
     } catch (e) {
-      return 'Error: Failed to trigger action.';
+      return 'Error: Failed to trigger action. Please try again.';
     }
   }
 }
