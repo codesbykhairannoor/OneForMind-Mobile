@@ -49,11 +49,12 @@ class AiCoachService {
 
   AiCoachService(this._dio);
 
-  Future<String> sendMessage(String message, {String? action}) async {
+  Future<String> sendMessage(String message, {String? action, String? sessionId}) async {
     try {
       final response = await _dio.post('/coach/chat', data: {
         'message': message,
         if (action != null) 'action': action,
+        if (sessionId != null) 'session_id': sessionId,
       });
 
       if (response.statusCode == 200) {
@@ -68,9 +69,12 @@ class AiCoachService {
     }
   }
 
-  Future<String> triggerAction(String action, {Map<String, dynamic>? payload}) async {
+  Future<String> triggerAction(String action, {Map<String, dynamic>? payload, String? sessionId}) async {
     try {
-      final response = await _dio.post('/coach/$action', data: payload ?? {});
+      final response = await _dio.post('/coach/$action', data: {
+        ...payload ?? {},
+        if (sessionId != null) 'session_id': sessionId,
+      });
 
       if (response.statusCode == 200) {
         return response.data['reply'] ?? response.data['message'] ?? 'Action completed successfully.';
