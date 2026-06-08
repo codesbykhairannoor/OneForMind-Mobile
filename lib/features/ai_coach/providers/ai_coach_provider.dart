@@ -88,3 +88,47 @@ class AiCoachService {
     }
   }
 }
+
+final aiSessionProvider = StateProvider<String?>((ref) => null);
+
+final aiLoadingProvider = StateProvider<bool>((ref) => false);
+
+final aiCoachControllerProvider = Provider<AiCoachController>((ref) {
+  final aiCoachService = ref.watch(aiCoachProvider);
+  final aiSession = ref.watch(aiSessionProvider);
+  final aiLoading = ref.watch(aiLoadingProvider.notifier);
+
+  return AiCoachController(aiCoachService, aiSession, aiLoading);
+});
+
+class AiCoachController {
+  final AiCoachService _aiCoachService;
+  final String? _sessionId;
+  final StateController<bool> _loadingController;
+
+  AiCoachController(this._aiCoachService, this._sessionId, this._loadingController);
+
+  Future<void> sendMessage(String message) async {
+    _loadingController.state = true;
+    try {
+      final response = await _aiCoachService.sendMessage(message, sessionId: _sessionId);
+      ref.read(chatMessagesProvider.notifier).addMessage(response, isUser: false);
+    } catch (e) {
+      ref.read(chatMessagesProvider.notifier).addMessage('Error: Failed to get response from AI Coach. Please try again.', isUser: false);
+    } finally {
+      _loadingController.state = false;
+    }
+  }
+
+  Future<void> triggerAction(String action, {Map<String, dynamic>? payload}) async {
+    _loadingController.state = true;
+    try {
+      final response = await _aiCoachService.triggerAction(action, payload: payload, sessionId: _sessionId);
+      ref.read(chatMessagesProvider.notifier).addMessage(response, isUser: false);
+    } catch (e) {
+      ref.read(chatMessagesProvider.notifier).addMessage('Error: Failed to trigger action. Please try again.', isUser: false);
+    } finally {
+      _loadingController.state = false;
+    }
+  }
+}
